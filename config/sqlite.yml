@@ -1,0 +1,20 @@
+Default: &defaults
+  database: beerdaylist.sqlite3
+  poolsize: 10
+
+Development:
+  <<: *defaults
+
+Testing:
+  database: beerdaylist_test.sqlite3
+  <<: *defaults
+
+Staging:
+  database: beerdaylist_staging.sqlite3
+  poolsize: 100
+  <<: *defaults
+
+Production:
+  database: beerdaylist_production.sqlite3
+  poolsize: 100
+  <<: *defaults
