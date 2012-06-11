@@ -4,13 +4,13 @@ license:           BSD3
 license-file:      LICENSE
 author:            Mark Hepburn
 maintainer:        Mark Hepburn
-synopsis:          The greatest Yesod web application ever.
-description:       I'm sure you can say something clever here if you try.
+synopsis:          The beerday list, in Yesod.
+description:       It's a bit embarrassing... let's pretend it's a blog.  Yeah, it's basically a blog.
 category:          Web
 stability:         Experimental
 cabal-version:     >= 1.8
 build-type:        Simple
-homepage:          http://beerdaylist.yesodweb.com/
+homepage:          http://beerdaylist.com/
 
 Flag dev
     Description:   Turn on development settings, like auto-reload templates.
