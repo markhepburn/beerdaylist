@@ -16,7 +16,6 @@ import Prelude
 import Yesod
 import Yesod.Static
 import Yesod.Auth
-import Yesod.Auth.BrowserId
 import Yesod.Auth.GoogleEmail
 import Yesod.Default.Config
 import Yesod.Default.Util (addStaticContentExternal)
@@ -31,6 +30,7 @@ import Model
 import Text.Jasmine (minifym)
 import Web.ClientSession (getKey)
 import Text.Hamlet (hamletFile)
+import Data.Text (Text, toLower)
 
 -- | The site argument for your application. This can be a good place to
 -- keep settings and values requiring initialization before your application
@@ -71,6 +71,11 @@ mkYesodData "App" $(parseRoutesFile "config/routes")
 
 type Form x = Html -> MForm App App (FormResult x, Widget)
 
+-- Authorisation is done just against this list (for safety, down-case
+-- ids before searching):
+authorisedUsers :: [Text]
+authorisedUsers = ["mark.hepburn@gmail.com", "olivergeorge@gmail.com"]
+
 -- Please see the documentation for the Yesod typeclass. There are a number
 -- of settings which can be configured by overriding methods here.
 instance Yesod App where
@@ -107,6 +112,18 @@ instance Yesod App where
     -- The page to be redirected to when authentication is required.
     authRoute _ = Just $ AuthR LoginR
 
+    isAuthorized (AuthR _) _ = return Authorized
+    isAuthorized _ _ =
+        do
+          mu <- maybeAuthId
+          return $ case mu of
+                     Nothing -> AuthenticationRequired
+                     Just email ->
+                         if (toLower email) `elem` authorisedUsers
+                         then Authorized
+                         else Unauthorized "Access is restricted"
+
+
     messageLogger y loc level msg =
       formatLogText (getLogger y) loc level msg >>= logMsg (getLogger y)
 
@@ -130,22 +147,19 @@ instance YesodPersist App where
             (connPool master)
 
 instance YesodAuth App where
-    type AuthId App = UserId
+    type AuthId App = Text
 
     -- Where to send a user after successful login
     loginDest _ = HomeR
     -- Where to send a user after logout
     logoutDest _ = HomeR
 
-    getAuthId creds = runDB $ do
-        x <- getBy $ UniqueUser $ credsIdent creds
-        case x of
-            Just (Entity uid _) -> return $ Just uid
-            Nothing -> do
-                fmap Just $ insert $ User (credsIdent creds) Nothing
+    -- We'll do our own authorisation (see isAuthorized), so all we
+    -- care about is the authenticated email address:
+    getAuthId = return . Just . credsIdent
 
-    -- You can add other plugins like BrowserID, email or OAuth here
-    authPlugins _ = [authBrowserId, authGoogleEmail]
+    -- We're just using Google here:
+    authPlugins _ = [authGoogleEmail]
 
     authHttpManager = httpManager
 
