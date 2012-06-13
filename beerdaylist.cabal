@@ -5,7 +5,8 @@ license-file:      LICENSE
 author:            Mark Hepburn
 maintainer:        Mark Hepburn
 synopsis:          The beerday list, in Yesod.
-description:       It's a bit embarrassing... let's pretend it's a blog.  Yeah, it's basically a blog.
+description:       It's a bit embarrassing... let's pretend it's a blog.
+                   Yeah, it's basically a blog.
 category:          Web
 stability:         Experimental
 cabal-version:     >= 1.8
