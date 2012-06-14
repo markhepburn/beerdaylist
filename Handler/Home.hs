@@ -2,6 +2,9 @@
 module Handler.Home where
 
 import Import
+import Data.Time (getCurrentTime)
+import Yesod.Form.Nic
+import Yesod.Auth
 
 -- This is a handler function for the GET request method on the HomeR
 -- resource pattern. All of your resource patterns are defined in
@@ -37,3 +40,17 @@ sampleForm :: Form (FileInfo, Text)
 sampleForm = renderDivs $ (,)
     <$> fileAFormReq "Choose a file"
     <*> areq textField "What's on the file?" Nothing
+
+newpostForm :: Form Entry
+newpostForm = renderBootstrap $ Entry
+    <$> areq textField "Title" Nothing
+    <*> aformM requireAuthId
+    <*> aformM (liftIO getCurrentTime)
+    <*> areq nicHtmlField "Post" Nothing
+
+commentForm :: EntryId -> Form Comment
+commentForm entryId = renderBootstrap $ Comment
+    <$> pure entryId
+    <*> aformM (liftIO getCurrentTime)
+    <*> aformM requireAuthId
+    <*> areq textField "Comment" Nothing

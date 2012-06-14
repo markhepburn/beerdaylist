@@ -6,12 +6,14 @@ User
 
 Entry
     title Text
-    user UserId
+    user Text
+--    user UserId
     posted UTCTime
     content Html
 
 Comment
     entry EntryId
     posted UTCTime
-    user UserId
+    user Text
+--    user UserId
     content Text
