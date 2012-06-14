@@ -22,6 +22,11 @@
         <script>
           document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/,'js');
     <body>
+        <div .navbar.navbar-fixed-top>
+            <div .navbar-inner>
+                <div .container>
+                    <a .brand href="@{HomeR}">The Beerday List
+                    <span .navbar-text>#{pageTitle pc}
         <div class="container">
             <header>
             <div id="main" role="main">
