@@ -119,17 +119,16 @@ instance Yesod App where
     -- The page to be redirected to when authentication is required.
     authRoute _ = Just $ AuthR LoginR
 
+    -- Every page (other than authentication ones of course) require
+    -- authentication, however once authenticated and provided with
+    -- creds (see getAuthId) they have full access:
     isAuthorized (AuthR _) _ = return Authorized
-    isAuthorized _ _ =
-        do
-          mu <- maybeAuthId
-          return $ case mu of
-                     Nothing -> AuthenticationRequired
-                     Just email ->
-                         if (toLower email) `elem` authorisedUsers
-                         then Authorized
-                         else Unauthorized "Access is restricted"
-
+    isAuthorized _ _ = do
+      mu <- maybeAuthId
+      return $
+        case mu of
+          Nothing -> AuthenticationRequired
+          Just _ -> Authorized
 
     messageLogger y loc level msg =
       formatLogText (getLogger y) loc level msg >>= logMsg (getLogger y)
@@ -154,16 +153,26 @@ instance YesodPersist App where
             (connPool master)
 
 instance YesodAuth App where
-    type AuthId App = Text
+    type AuthId App = UserId
 
     -- Where to send a user after successful login
     loginDest _ = HomeR
     -- Where to send a user after logout
     logoutDest _ = HomeR
 
-    -- We'll do our own authorisation (see isAuthorized), so all we
-    -- care about is the authenticated email address:
-    getAuthId = return . Just . credsIdent
+    -- Our authid is the UserId; we only return this if the user is
+    -- both authenticated (ie, has creds and we get this far), and is
+    -- in the list authorisedUsers:
+    getAuthId creds =
+        if email `elem` authorisedUsers
+        then runDB $ do
+          user <- insertBy $ User email
+          return $ Just $
+             case user of
+               Left (Entity uid _) -> uid
+               Right uid -> uid
+        else return Nothing
+      where email = toLower $ credsIdent creds
 
     -- We're just using Google here:
     authPlugins _ = [authGoogleEmail]
