@@ -167,10 +167,7 @@ instance YesodAuth App where
         if email `elem` authorisedUsers
         then runDB $ do
           user <- insertBy $ User email
-          return $ Just $
-             case user of
-               Left (Entity uid _) -> uid
-               Right uid -> uid
+          return $ Just $ either entityKey id user
         else return Nothing
       where email = toLower $ credsIdent creds
 
