@@ -6,40 +6,64 @@ import Data.Time (getCurrentTime)
 import Yesod.Form.Nic
 import Yesod.Auth
 
--- This is a handler function for the GET request method on the HomeR
--- resource pattern. All of your resource patterns are defined in
--- config/routes
---
--- The majority of the code you will write in Yesod lives in these handler
--- functions. You can spread them across multiple files if you are so
--- inclined, or create a single monolithic file.
+-- Handler for the home page.  Just displays a list of posts.
+
 getHomeR :: Handler RepHtml
 getHomeR = do
-    (formWidget, formEnctype) <- generateFormPost sampleForm
-    let submission = Nothing :: Maybe (FileInfo, Text)
-        handlerName = "getHomeR" :: Text
-    defaultLayout $ do
-        aDomId <- lift newIdent
-        setTitle "Welcome To Yesod!"
-        $(widgetFile "homepage")
+  entries <- runDB $ selectList [] [Desc EntryPosted]
+  defaultLayout $ do
+    setTitle "How do you plan to make money this week?"
+    $(widgetFile "homepage")
 
-postHomeR :: Handler RepHtml
-postHomeR = do
-    ((result, formWidget), formEnctype) <- runFormPost sampleForm
-    let handlerName = "postHomeR" :: Text
-        submission = case result of
-            FormSuccess res -> Just res
-            _ -> Nothing
+-- Creating new entries: GET displays the new-post form, and POST
+-- creates it (and redirects to the new post)
 
-    defaultLayout $ do
-        aDomId <- lift newIdent
-        setTitle "Welcome To Yesod!"
-        $(widgetFile "homepage")
+getPostR :: Handler RepHtml
+getPostR = do
+  (formWidget, encType) <- generateFormPost newpostForm
+  defaultLayout $ do
+      setTitle "New Post"
+      $(widgetFile "newpost")
 
-sampleForm :: Form (FileInfo, Text)
-sampleForm = renderDivs $ (,)
-    <$> fileAFormReq "Choose a file"
-    <*> areq textField "What's on the file?" Nothing
+postPostR :: Handler RepHtml
+postPostR = do
+  ((res, _formWidget), _encType) <- runFormPost newpostForm
+  case res of
+    FormSuccess entry -> do
+        entryId <- runDB $ insert entry
+        setMessage "Your post was created"
+        redirect $ EntryR entryId
+    _ -> do
+        setMessage "Error creating your post, sorry"
+        redirect PostR
+
+-- Entries themselves.  GET displays the individual entry; POST adds a
+-- comment.
+
+getEntryR :: EntryId -> Handler RepHtml
+getEntryR entryId = do
+  (entry, comments) <- runDB $ do
+         entry    <- get404 entryId
+         comments <- selectList [CommentEntry ==. entryId] [Asc CommentPosted]
+         return (entry, map entityVal comments)
+  (commentWidget, encType) <- generateFormPost (commentForm entryId)
+  defaultLayout $ do
+    setTitle $ toHtml $ entryTitle entry
+    $(widgetFile "entry")
+
+postEntryR :: EntryId -> Handler RepHtml
+postEntryR entryId = do
+  ((res, _formWidget), _encType) <- runFormPost $ commentForm entryId
+  case res of
+    FormSuccess comment -> do
+        _ <- runDB $ insert comment
+        setMessage "Comment posted"
+        redirect $ EntryR entryId
+    _ -> do
+        setMessage "Couldn't add your comment, sorry"
+        redirect $ EntryR entryId
+
+-- Forms:
 
 newpostForm :: Form Entry
 newpostForm = renderBootstrap $ Entry

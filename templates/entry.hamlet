@@ -1,0 +1,14 @@
+<h1>#{entryTitle entry}
+<article>#{entryContent entry}
+    <section .comments>
+        <h2>Comments
+        $if not (null comments)
+            $forall Comment _entry posted _user text <- comments
+                <div .comment>
+                    <span .date>#{show posted}
+                    <div .content>#{text}
+
+        <h3>Add comment:
+        <form method=post enctype=#{encType}>
+            ^{commentWidget}
+            <input type=submit value=Submit>
