@@ -106,7 +106,7 @@ instance Yesod App where
 }
 |]
             addScriptRemote "http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"
-            addScriptRemote "http://current.bootstrapcdn.com/bootstrap-v204/js/bootstrap-alert.js"
+            addScriptRemote "http://current.bootstrapcdn.com/bootstrap-v204/js/bootstrap.min.js"
             $(widgetFile "default-layout")
         hamletToRepHtml $(hamletFile "templates/default-layout-wrapper.hamlet")
 
