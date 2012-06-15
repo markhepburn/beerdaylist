@@ -45,7 +45,9 @@ getEntryR entryId = do
   (entry, comments) <- runDB $ do
          entry    <- get404 entryId
          comments <- selectList [CommentEntry ==. entryId] [Asc CommentPosted]
-         return (entry, map entityVal comments)
+         let commentVals = map entityVal comments
+         users    <- mapM (getJust . commentUser) commentVals
+         return (entry, zip commentVals users)
   (commentWidget, encType) <- generateFormPost (commentForm entryId)
   defaultLayout $ do
     setTitle $ toHtml $ entryTitle entry

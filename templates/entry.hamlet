@@ -3,10 +3,11 @@
     <section .comments>
         <h2>Comments
         $if not (null comments)
-            $forall Comment _entry posted _user text <- comments
+            $forall commentUserPair <- comments
                 <div .comment>
-                    <span .date>#{show posted}
-                    <div .content>#{text}
+                    <span .date>#{show $ commentPosted $ fst commentUserPair}
+                    <span .owner>#{userIdent $ snd commentUserPair}
+                    <div .content>#{commentContent $ fst commentUserPair}
 
         <h3>Add comment:
         <form method=post enctype=#{encType}>
