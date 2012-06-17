@@ -166,7 +166,7 @@ instance YesodAuth App where
     getAuthId creds =
         if email `elem` authorisedUsers
         then runDB $ do
-          user <- insertBy $ User email
+          user <- insertBy $ User Nothing email
           return $ Just $ either entityKey id user
         else return Nothing
       where email = toLower $ credsIdent creds

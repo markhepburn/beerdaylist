@@ -1,3 +1,7 @@
+$maybe uname <- userName user
+    <div .loggedin>Logged in as #{uname}
+$nothing
+    <div .loggedin>Logged in as #{userIdent user}
 $if null entriesWithCounts
     <p>Nothing posted so far; get creative!!
 

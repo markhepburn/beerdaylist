@@ -10,6 +10,8 @@ import Yesod.Auth
 
 getHomeR :: Handler RepHtml
 getHomeR = do
+  Just userEntity <- maybeAuth
+  let user = entityVal userEntity
   entriesWithCounts <- runDB $ do
     entries <- selectList [] [Desc EntryPosted]
     let entryIds = map entityKey entries

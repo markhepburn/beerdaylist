@@ -1,4 +1,5 @@
 User
+    name Text Maybe
     ident Text
     UniqueUser ident
 
