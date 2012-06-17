@@ -7,13 +7,13 @@ $if null entriesWithCounts
 
 $else
     <ol>
-    $forall entryAndCount <- entriesWithCounts
-        $with Entity entryId entry <- fst entryAndCount
-            <li>
-                <a href=@{EntryR entryId}>#{entryTitle entry}
-                $with cnt <- snd entryAndCount
-                    $if (>) cnt 0
-                        <span .count>
-                            <i .icon-comment>
-                            #{cnt}
+        $forall entryAndCount <- entriesWithCounts
+            $with Entity entryId entry <- fst entryAndCount
+                <li>
+                    <a href=@{EntryR entryId}>#{entryTitle entry}
+                    $with cnt <- snd entryAndCount
+                        $if (>) cnt 0
+                            <span .count>
+                                <i .icon-comment>
+                                #{cnt}
 
