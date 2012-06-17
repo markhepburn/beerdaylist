@@ -10,7 +10,11 @@ import Yesod.Auth
 
 getHomeR :: Handler RepHtml
 getHomeR = do
-  entries <- runDB $ selectList [] [Desc EntryPosted]
+  entriesWithCounts <- runDB $ do
+    entries <- selectList [] [Desc EntryPosted]
+    let entryIds = map entityKey entries
+    counts <- mapM (\eid -> count [CommentEntry ==. eid]) entryIds
+    return $ zip entries counts
   defaultLayout $ do
     setTitle "How do you plan to make money this week?"
     $(widgetFile "homepage")
