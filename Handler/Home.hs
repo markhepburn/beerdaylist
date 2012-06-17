@@ -71,6 +71,28 @@ postEntryR entryId = do
         setMessage "Couldn't add your comment, sorry"
         redirect $ EntryR entryId
 
+-- User's account management:
+
+getAccountR :: Handler RepHtml
+getAccountR = do
+  (accountWidget, encType) <- generateFormPost userUpdateForm
+  defaultLayout $ do
+    setTitle "Update Details"
+    $(widgetFile "account")
+
+postAccountR :: Handler RepHtml
+postAccountR = do
+  ((res, _formWidget), _encType) <- runFormPost userUpdateForm
+  case res of
+    FormSuccess user -> do
+        uid <- requireAuthId
+        runDB $ update uid [UserName =. userName user]
+        setMessage "Account updated."
+        redirect AccountR
+    _ -> do
+        setMessage "Couldn't update your details, sorry."
+        redirect AccountR
+
 -- Forms:
 
 newpostForm :: Form Entry
@@ -86,3 +108,8 @@ commentForm entryId = renderBootstrap $ Comment
     <*> aformM (liftIO getCurrentTime)
     <*> aformM requireAuthId
     <*> areq textField "Comment" Nothing
+
+userUpdateForm :: Form User
+userUpdateForm = renderBootstrap $ User
+    <$> aopt textField "Name" Nothing
+    <*> aformM (requireAuthId >>= \uid -> runDB $ (getJust uid) >>= return . userIdent)

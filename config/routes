@@ -9,3 +9,5 @@
 /post/#EntryId EntryR GET POST
 
 /post PostR GET POST
+
+/account AccountR GET POST
