@@ -8,8 +8,8 @@ $else
             <li>
                 <a href=@{EntryR entryId}>#{entryTitle entry}
                 $with cnt <- snd entryAndCount
-                    $if (==) cnt 1
-                        <span .count>1 Comment
-                    $elseif (>) cnt 1
-                        <span .count>#{cnt} Comments
+                    $if (>) cnt 0
+                        <span .count>
+                            <i .icon-comment>
+                            #{cnt}
 
