@@ -1,5 +1,6 @@
 $maybe uname <- userName user
-    <div .loggedin>Logged in as #{uname}
+    <div .loggedin>Logged in as #
+        <a href=@{AccountR}>#{uname}
 $nothing
     <div .loggedin>Logged in as #{userIdent user}
 $if null entriesWithCounts
