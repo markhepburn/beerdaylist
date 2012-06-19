@@ -6,6 +6,7 @@
 module Settings
     ( widgetFile
     , PersistConfig
+    , databaseYml
     , staticRoot
     , staticDir
     , Extra (..)
@@ -16,6 +17,7 @@ import Prelude
 import Text.Shakespeare.Text (st)
 import Language.Haskell.TH.Syntax
 import Database.Persist.Sqlite (SqliteConf)
+import Database.Persist.Postgresql (PostgresConf)
 import Yesod.Default.Config
 import qualified Yesod.Default.Util
 import Data.Text (Text)
@@ -24,7 +26,13 @@ import Control.Applicative
 import Settings.Development
 
 -- | Which Persistent backend this site is using.
+#if DEVELOPMENT
 type PersistConfig = SqliteConf
+databaseYml = "config/sqlite.yml"
+#else
+type PersistConfig = PostgresConf
+databaseYml = "config/postgres.yml"
+#endif
 
 -- Static setting below. Changing these requires a recompile
 

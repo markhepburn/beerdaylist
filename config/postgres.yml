@@ -1,0 +1,21 @@
+Default: &defaults
+  user: beerday
+  password: beerday
+  host: localhost
+  port: 5432
+  database: beerdaylist
+  poolsize: 10
+
+Development:
+  <<: *defaults
+
+Test:
+  <<: *defaults
+
+Staging:
+  poolsize: 100
+  <<: *defaults
+
+Production:
+  poolsize: 100
+  <<: *defaults
