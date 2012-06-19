@@ -123,8 +123,11 @@ instance Yesod App where
 
     -- Every page (other than authentication ones of course) require
     -- authentication, however once authenticated and provided with
-    -- creds (see getAuthId) they have full access:
+    -- creds (see getAuthId) they have full access.  Also authorise
+    -- static routes; there's no real need not to, but I think it was
+    -- also confusing redirects after athentication sometimes.
     isAuthorized (AuthR _) _ = return Authorized
+    isAuthorized (StaticR _) _ = return Authorized
     isAuthorized _ _ = do
       mu <- maybeAuthId
       return $
