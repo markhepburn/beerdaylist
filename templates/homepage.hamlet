@@ -3,7 +3,11 @@ $maybe uname <- userName user
         <a href=@{AccountR}>#{uname}
 $nothing
     <div .loggedin>Logged in as #
-        <a href=@{AccountR}#{userIdent user}
+        <a href=@{AccountR}>#{userIdent user}
+
+<div .createpost>
+    <a href=@{PostR}>New Post
+
 $if null entriesWithCounts
     <p>Nothing posted so far; get creative!!
 

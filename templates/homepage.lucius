@@ -1,7 +1,11 @@
 h1 {
     text-align: center
 }
-.loggedin{
+.loggedin {
+    float: right;
+}
+.createpost {
+    clear: right;
     float: right;
 }
 ol {
