@@ -100,7 +100,9 @@ instance Yesod App where
 
         pc <- widgetToPageContent $ do
             $(widgetFile "normalize")
-            addStylesheet $ StaticR css_bootstrap_css
+            -- addStylesheet $ StaticR css_bootstrap_css
+            -- addStylesheetRemote "http://current.bootstrapcdn.com/bootstrap-v204/css/bootstrap-responsive.min.css"
+            addStylesheetRemote "http://current.bootstrapcdn.com/bootstrap-v204/css/bootstrap-combined.min.css"
             toWidget [lucius| #main {
     margin-top: 40px;
 }
