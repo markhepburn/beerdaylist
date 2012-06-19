@@ -24,7 +24,6 @@ import Yesod.Form.Nic
 import Network.HTTP.Conduit (Manager)
 import qualified Settings
 import qualified Database.Persist.Store
-import Settings.StaticFiles
 import Database.Persist.GenericSql
 import Settings (widgetFile, Extra (..))
 import Model
@@ -100,8 +99,6 @@ instance Yesod App where
 
         pc <- widgetToPageContent $ do
             $(widgetFile "normalize")
-            -- addStylesheet $ StaticR css_bootstrap_css
-            -- addStylesheetRemote "http://current.bootstrapcdn.com/bootstrap-v204/css/bootstrap-responsive.min.css"
             addStylesheetRemote "http://current.bootstrapcdn.com/bootstrap-v204/css/bootstrap-combined.min.css"
             toWidget [lucius| #main {
     margin-top: 40px;
