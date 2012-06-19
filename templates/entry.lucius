@@ -1,0 +1,16 @@
+h1 {
+    padding: 15px 0;
+}
+.comments {
+    margin-top: 10px;
+    border-top: 1px solid #33B5E5;
+}
+.comment {
+    padding: 10px 0;
+}
+.owner {
+    padding-left: 40px;
+}
+.controls input {
+    width: 380px;
+}
