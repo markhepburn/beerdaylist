@@ -125,6 +125,8 @@ instance Yesod App where
     -- also confusing redirects after athentication sometimes.
     isAuthorized (AuthR _) _ = return Authorized
     isAuthorized (StaticR _) _ = return Authorized
+    isAuthorized (FaviconR) _ = return Authorized
+    isAuthorized (RobotsR) _ = return Authorized
     isAuthorized _ _ = do
       mu <- maybeAuthId
       return $
