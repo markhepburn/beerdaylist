@@ -1,5 +1,10 @@
 h1 {
-    padding: 15px 0;
+    padding: 15px 0 0 0;
+}
+.postedon {
+    padding-bottom: 15px;
+    display: block;
+    color: grey;
 }
 .comments {
     margin-top: 10px;

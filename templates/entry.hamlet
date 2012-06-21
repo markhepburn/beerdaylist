@@ -1,5 +1,7 @@
 <h1>#{entryTitle entry}
-<article>#{entryContent entry}
+<article>
+    <span .postedon>Post on #{fmtTime $ entryPosted entry}
+    #{entryContent entry}
     <section .comments>
         <h2>Comments
         $if not (null comments)
