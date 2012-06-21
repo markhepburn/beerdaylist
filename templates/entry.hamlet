@@ -5,7 +5,7 @@
         $if not (null comments)
             $forall commentUserPair <- comments
                 <div .comment>
-                    <span .date>#{show $ commentPosted $ fst commentUserPair}
+                    <span .date>#{fmtTime $ commentPosted $ fst commentUserPair}
                     <span .owner>#{userIdent $ snd commentUserPair}
                     <div .content>#{commentContent $ fst commentUserPair}
 

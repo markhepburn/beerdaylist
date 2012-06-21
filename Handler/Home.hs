@@ -2,9 +2,18 @@
 module Handler.Home where
 
 import Import
-import Data.Time (getCurrentTime)
+import Data.Time
+import System.Locale
 import Yesod.Form.Nic
 import Yesod.Auth
+
+-- Utility for formatting:
+fmtTime :: UTCTime -> String
+fmtTime tm = formatTime loc fmt ltm
+    where loc = defaultTimeLocale
+          ltm = utcToLocalTime hbt tm
+          fmt = "%a %e %b, %Y %R%P"
+          hbt = TimeZone 600 False "EST"
 
 -- Handler for the home page.  Just displays a list of posts.
 
