@@ -1,11 +1,12 @@
 {-# LANGUAGE TupleSections, OverloadedStrings #-}
 module Handler.Home where
 
-import Import
+import Data.Maybe (listToMaybe)
 import Data.Time
+import Import
 import System.Locale
-import Yesod.Form.Nic
 import Yesod.Auth
+import Yesod.Form.Nic
 
 -- Utility for formatting:
 fmtTime :: UTCTime -> String
@@ -57,12 +58,14 @@ postPostR = do
 
 getEntryR :: EntryId -> Handler RepHtml
 getEntryR entryId = do
-  (entry, comments) <- runDB $ do
+  (entry, comments, maybeNext, maybePrev) <- runDB $ do
          entry    <- get404 entryId
          comments <- selectList [CommentEntry ==. entryId] [Asc CommentPosted]
          let commentVals = map entityVal comments
          users    <- mapM (getJust . commentUser) commentVals
-         return (entry, zip commentVals users)
+         nextP    <- selectList [EntryPosted >. entryPosted entry] [Asc EntryPosted, LimitTo 1]
+         prevP    <- selectList [EntryPosted <. entryPosted entry] [Desc EntryPosted, LimitTo 1]
+         return (entry, zip commentVals users, listToMaybe nextP, listToMaybe prevP)
   (commentWidget, encType) <- generateFormPost (commentForm entryId)
   defaultLayout $ do
     setTitle $ toHtml $ entryTitle entry
