@@ -102,6 +102,9 @@ instance Yesod App where
             addStylesheetRemote "http://current.bootstrapcdn.com/bootstrap-v204/css/bootstrap-combined.min.css"
             toWidget [lucius| #main {
     margin-top: 40px;
+    input, textarea {
+        width: 400px;
+    }
 }
 |]
             addScriptRemote "http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"
