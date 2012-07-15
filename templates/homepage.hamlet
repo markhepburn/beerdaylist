@@ -16,7 +16,6 @@ $else
         $forall entryAndCount <- entriesWithCounts
             $with Entity entryId entry <- fst entryAndCount
                 <li>
-                    <a href=@{EntryR entryId}>#{entryTitle entry}
                     $with cnt <- snd entryAndCount
                         $if (==) cnt 1
                             <span .count>
@@ -26,4 +25,5 @@ $else
                             <span .count>
                                 <i .icon-comments>
                                 #{cnt}
+                    <a href=@{EntryR entryId}>#{entryTitle entry}
 
