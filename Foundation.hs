@@ -31,6 +31,7 @@ import Text.Jasmine (minifym)
 import Web.ClientSession (getKey)
 import Text.Hamlet (hamletFile)
 import Data.Text (Text, toLower)
+import Settings.StaticFiles
 
 -- | The site argument for your application. This can be a good place to
 -- keep settings and values requiring initialization before your application
@@ -100,10 +101,17 @@ instance Yesod App where
         pc <- widgetToPageContent $ do
             $(widgetFile "normalize")
             addStylesheetRemote "http://current.bootstrapcdn.com/bootstrap-v204/css/bootstrap-combined.min.css"
+            -- But use font-awesome for icons (remember to override
+            -- the bootstrap glyphish background-image properties
+            -- too):
+            addStylesheet $ StaticR css_fontawesome_css
             toWidget [lucius| #main {
     margin-top: 40px;
     input, textarea {
         width: 400px;
+    }
+    [class^="icon-"], [class*=" icon-"] {
+        background-image: none;
     }
 }
 |]
