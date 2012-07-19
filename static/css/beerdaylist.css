@@ -1,0 +1,15 @@
+body {
+    padding-top: 60px;
+}
+input, textarea {
+    width: 400px;
+}
+[class^="icon-"], [class*=" icon-"] {
+    background-image: none;
+}
+
+@media(max-width: 979px) {
+    body {
+        padding-top: 0;
+    }
+}

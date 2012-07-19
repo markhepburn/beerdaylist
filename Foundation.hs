@@ -105,18 +105,9 @@ instance Yesod App where
             -- the bootstrap glyphish background-image properties
             -- too):
             addStylesheet $ StaticR css_fontawesome_css
-            toWidget [lucius| #main {
-    margin-top: 40px;
-    input, textarea {
-        width: 400px;
-    }
-    [class^="icon-"], [class*=" icon-"] {
-        background-image: none;
-    }
-}
-|]
             addScriptRemote "http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"
             addScriptRemote "http://current.bootstrapcdn.com/bootstrap-v204/js/bootstrap.min.js"
+            addStylesheet $ StaticR css_beerdaylist_css
             $(widgetFile "default-layout")
         hamletToRepHtml $(hamletFile "templates/default-layout-wrapper.hamlet")
 
